@@ -6,22 +6,23 @@ A real-time cryptocurrency market viewer:
 - **`mobile/`**: a React Native (Expo SDK 58) app showing a live watchlist, order book, depth chart and telemetry, designed to stay smooth under sustained update bursts.
 - **`packages/contracts/`**: the wire protocol (TypeScript types), shared by both sides so protocol drift is a compile error.
 
-> 📹 **Screen recording:** [`docs/pulsecrypto-demo.mp4`](docs/pulsecrypto-demo.mp4) (2:43, Android emulator, live Binance data, production JS bundle)
+> 📹 **Screen recording:** [`docs/pulsecrypto-demo.mp4`](docs/pulsecrypto-demo.mp4) (3:29, Android emulator, live Binance data, production JS bundle)
 >
 > | Time | Shown |
 > |---|---|
 > | 0:00 | Terminal: live price flashes, buy/sell pressure, order book with animated depth bars |
 > | 0:10 | Scroll to the Skia market-depth chart, with liquidity gap and pressure readouts |
 > | 0:22 | Markets: favourite BTC and SOL (pinned first), search `eth`, Favourites filter, pull-to-refresh |
-> | 0:45 | Open a pair from the watchlist (SOL/USDT) in the Terminal |
+> | 0:47 | Open a pair from the watchlist (SOL/USDT) in the Terminal |
 > | 0:58 | Account drawer (placeholder) |
-> | 1:01 | Telemetry: message, tick and render rates; latency; requested vs effective interval |
-> | 1:12 | Settings: drag the update interval down to 20ms; Telemetry confirms the server applied it |
-> | 1:35 | Backend stopped: RECONNECTING banner with retry countdown, last data kept on screen |
-> | 1:58 | Backend restarted: the app goes back to LIVE without user action |
-> | 2:12 | App killed and relaunched: favourites and the selected pair are restored from storage |
->
-> FPS readings in the video are lower than normal because the emulator was also encoding the screen recording.
+> | 1:02 | Telemetry: message, tick and render rates; latency; requested vs effective interval; memory footprint (live heap, external, reserved, GC cycles) |
+> | 1:17 | Settings: drag the update interval down to 20ms; Telemetry confirms the server applied it |
+> | 1:38 | Settings performance dashboard: FPS ring, ingestion rate, Memory Footprint Tracker |
+> | 2:01 | Backend stopped: RECONNECTING banner with retry countdown, last data kept on screen |
+> | 2:25 | Backend restarted: the app goes back to LIVE without user action |
+> | 2:50 | App killed and relaunched: favourites and the selected pair are restored from storage |
+
+FPS readings in the video are lower than normal because the emulator was also encoding the screen recording.
 
 ---
 
