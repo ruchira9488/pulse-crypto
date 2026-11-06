@@ -7,3 +7,5 @@ export { ProgressBar } from './ProgressBar';
 export { SearchInput } from './SearchInput';
 export { SectionEyebrow } from './SectionEyebrow';
 export { Toggle } from './Toggle';
+export { ChangeLabel } from './ChangeLabel';
+export { FlashingNumber } from './FlashingNumber';
