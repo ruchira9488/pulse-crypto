@@ -1,13 +1,14 @@
 import { create } from 'zustand';
 import { resetStreamMetrics, streamMetrics } from '@/features/market-stream';
-import { computeRates, pushBounded, readJsHeapMb, type CounterSnapshot, type Rates } from '../model/rates';
+import { computeRates, pushBounded, readMemoryFootprint, type CounterSnapshot, type MemoryFootprint, type Rates } from '../model/rates';
 
 const HISTORY = 60;
 
 interface TelemetryState extends Rates {
   jsFps: number;
-  heapMb?: number;
-  heapHistory: number[];
+  memory?: MemoryFootprint;
+  /** Total footprint (MB) per sample, for the tracker sparkline. */
+  memoryHistory: number[];
   messagesHistory: number[];
   reconnects: number;
   /** Seconds since the last socket message (0 when flowing). */
@@ -21,14 +22,14 @@ export const useTelemetryStore = create<TelemetryState>()((set) => ({
   kbPerSec: 0,
   ticksPerSec: 0,
   commitsPerSec: 0,
-  heapHistory: [],
+  memoryHistory: [],
   messagesHistory: [],
   reconnects: 0,
   silenceSec: 0,
   reset: () => {
     resetStreamMetrics();
     lastSnapshot = snapshot();
-    set({ heapHistory: [], messagesHistory: [], reconnects: 0 });
+    set({ memoryHistory: [], messagesHistory: [], reconnects: 0 });
   },
 }));
 
@@ -62,13 +63,13 @@ function sample() {
   lastSnapshot = next;
   lastSampleAt = now;
 
-  const heapMb = readJsHeapMb();
+  const memory = readMemoryFootprint();
   const state = useTelemetryStore.getState();
   useTelemetryStore.setState({
     ...rates,
     jsFps,
-    heapMb,
-    heapHistory: heapMb !== undefined ? pushBounded(state.heapHistory, heapMb, HISTORY) : state.heapHistory,
+    memory,
+    memoryHistory: memory ? pushBounded(state.memoryHistory, memory.totalMb, HISTORY) : state.memoryHistory,
     messagesHistory: pushBounded(state.messagesHistory, rates.messagesPerSec, HISTORY),
     reconnects: streamMetrics.reconnects,
     silenceSec: streamMetrics.lastMessageAt ? Math.floor((now - streamMetrics.lastMessageAt) / 1000) : 0,

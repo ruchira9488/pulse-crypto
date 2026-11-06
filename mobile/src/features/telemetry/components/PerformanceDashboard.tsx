@@ -10,8 +10,8 @@ import { Sparkline } from './Sparkline';
 
 /** "System Telemetry / Performance Dashboard" card from the Settings mockup. */
 export function PerformanceDashboard() {
-  const { jsFps, messagesPerSec, heapMb, heapHistory, reset } = useTelemetryStore(
-    useShallow((s) => ({ jsFps: s.jsFps, messagesPerSec: s.messagesPerSec, heapMb: s.heapMb, heapHistory: s.heapHistory, reset: s.reset })),
+  const { jsFps, messagesPerSec, memory, memoryHistory, reset } = useTelemetryStore(
+    useShallow((s) => ({ jsFps: s.jsFps, messagesPerSec: s.messagesPerSec, memory: s.memory, memoryHistory: s.memoryHistory, reset: s.reset })),
   );
   const live = useConnectionStore(selectIsLive);
   const healthy = live && jsFps >= 45;
@@ -49,12 +49,17 @@ export function PerformanceDashboard() {
 
       <View style={[styles.tile, styles.memoryTile]}>
         <View style={styles.memoryHeader}>
-          <AppText color="textSecondary">JS Heap (Hermes)</AppText>
+          <AppText color="textSecondary">Memory Footprint Tracker</AppText>
           <AppText variant="monoMedium" style={{ color: palette.tertiary[300] }}>
-            {heapMb !== undefined ? `${heapMb.toFixed(1)} MB` : 'n/a'}
+            {memory ? `${memory.totalMb.toFixed(1)} MB` : 'n/a'}
           </AppText>
         </View>
-        <Sparkline values={heapHistory} color={palette.tertiary[300]} />
+        {memory && (
+          <AppText variant="bodySmall" color="textMuted">
+            {`Live heap ${memory.liveMb.toFixed(1)} · External ${memory.externalMb.toFixed(1)} · Reserved ${memory.reservedMb.toFixed(1)} MB`}
+          </AppText>
+        )}
+        <Sparkline values={memoryHistory} color={palette.tertiary[300]} />
       </View>
     </Card>
   );

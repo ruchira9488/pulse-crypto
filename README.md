@@ -165,7 +165,7 @@ mobile/src/
     ├── watchlist/          Markets screen, search/filter
     ├── market-details/     Terminal screen: price, stats, order book
     ├── market-depth/       Skia depth chart + liquidity/pressure readouts
-    ├── telemetry/          FPS / throughput / heap sampling + dashboard
+    ├── telemetry/          FPS / throughput / memory footprint sampling + dashboard
     ├── settings/           throttling controls synced to the gateway
     └── app-shell/          tab bar, drawer, FocusGate
 ```
@@ -309,8 +309,8 @@ Screens follow the supplied mockups and design system: Primary `#0B0E14`, Second
 |---|---|
 | **Terminal** | Selected pair: last price (flashes green/red), 24h change, high/low, market cap, spread, buy/sell pressure bar, last-updated timestamp, live bids and asks with animated depth bars, Skia market-depth chart with liquidity-gap and pressure readouts. |
 | **Markets** | Watchlist of every pair: price, 24h change, live indicator and favourite star. Search (case- and separator-insensitive: `btc`, `BTC/USDT`, `btc usdt`), an All / Favourites filter with favourites pinned first, and pull-to-refresh of `/pairs/meta` that doesn't touch the live socket. |
-| **Telemetry** | Messages/s, KB/s, ticks/s, store commits/s, JS FPS, Hermes heap, RTT, requested vs effective interval, compression, reconnects, silence. |
-| **Settings** | **Working** throttling controls: an update-interval slider (10–1000ms) sent to the gateway per client, a compression toggle (permessage-deflate) and an adaptive back-off toggle. All are persisted and re-applied after every reconnect. Below them, the performance dashboard (FPS ring, message rate, heap sparkline) and system info cards. |
+| **Telemetry** | Messages/s, KB/s, ticks/s, store commits/s, JS FPS, memory footprint (live JS heap + external, reserved heap, GC cycles), RTT, requested vs effective interval, compression, reconnects, silence. |
+| **Settings** | **Working** throttling controls: an update-interval slider (10–1000ms) sent to the gateway per client, a compression toggle (permessage-deflate) and an adaptive back-off toggle. All are persisted and re-applied after every reconnect. Below them, the performance dashboard (FPS ring, message rate, Memory Footprint Tracker sparkline) and system info cards. |
 
 The drawer (Pro Trader, API Keys…) is a presentational placeholder. Authentication is out of scope.
 

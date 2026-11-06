@@ -22,7 +22,7 @@ export function TelemetryScreen() {
       messagesHistory: s.messagesHistory,
       reconnects: s.reconnects,
       silenceSec: s.silenceSec,
-      heapMb: s.heapMb,
+      memory: s.memory,
     })),
   );
   const c = useConnectionStore(
@@ -73,7 +73,11 @@ export function TelemetryScreen() {
         <Card style={styles.card}>
           <SectionEyebrow>RUNTIME</SectionEyebrow>
           <Row label="JS thread FPS" value={String(t.jsFps)} />
-          <Row label="JS heap (Hermes)" value={t.heapMb !== undefined ? `${t.heapMb.toFixed(1)} MB` : 'n/a'} />
+          <Row label="Memory footprint" value={t.memory ? `${t.memory.totalMb.toFixed(1)} MB` : 'n/a'} />
+          <Row label="Live JS heap" value={t.memory ? `${t.memory.liveMb.toFixed(1)} MB` : 'n/a'} />
+          <Row label="External (native, JS-owned)" value={t.memory ? `${t.memory.externalMb.toFixed(1)} MB` : 'n/a'} />
+          <Row label="Reserved heap (Hermes GC)" value={t.memory ? `${t.memory.reservedMb.toFixed(1)} MB` : 'n/a'} />
+          <Row label="GC cycles" value={t.memory?.gcCount !== undefined ? String(t.memory.gcCount) : 'n/a'} />
         </Card>
       </ScrollView>
     </View>
