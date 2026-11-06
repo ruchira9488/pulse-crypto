@@ -11,6 +11,9 @@ class FakeSocket implements SessionSocket {
   send(data: string, options: { compress: boolean }) {
     this.sent.push({ data, compress: options.compress });
   }
+  terminate() {
+    this.readyState = 3;
+  }
   close(code: number, reason: string) {
     this.closed = { code, reason };
     this.readyState = 3;

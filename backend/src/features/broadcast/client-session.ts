@@ -7,7 +7,11 @@ export interface SessionSocket {
   readonly bufferedAmount: number;
   send(data: string, options: { compress: boolean }): void;
   close(code: number, reason: string): void;
+  terminate(): void;
 }
+
+/** Grace period for the close handshake before a congested socket is destroyed. */
+const SLOW_CONSUMER_TERMINATE_AFTER_MS = 1_000;
 
 export interface SessionLimits {
   minIntervalMs: number;
@@ -182,6 +186,9 @@ export class ClientSession {
     this.stop();
     this.onSlowConsumer(this);
     this.socket.close(SLOW_CONSUMER_CLOSE_CODE, `slow consumer: ${reason}`.slice(0, 120));
+    // The close frame is queued behind the backlog a slow client isn't reading,
+    // so the handshake may never finish. Free the socket and its buffer regardless.
+    setTimeout(() => this.socket.terminate(), SLOW_CONSUMER_TERMINATE_AFTER_MS).unref();
   }
 
   private clamp(ms: number): number {

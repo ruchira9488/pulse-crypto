@@ -47,7 +47,7 @@ export function computeBookMetrics(bids: readonly BookLevel[], asks: readonly Bo
     mid,
     // Avoid float noise such as 0.010000000009313226 on the wire.
     spread: round(spread, 10),
-    spreadPct: mid > 0 ? round((spread / mid) * 100, 4) : 0,
+    spreadPct: mid > 0 ? round((spread / mid) * 100, 6) : 0,
     buyPressure,
     sellPressure: round(100 - buyPressure, 1),
   };
