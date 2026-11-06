@@ -74,14 +74,9 @@ export const DepthChart = memo(function DepthChart({ bids, asks, height = HEIGHT
   }, [curve, fromBids, toBids, fromAsks, toAsks, progress]);
 
   const mid = width / 2;
-  const bidPath = useDerivedValue(
-    () => buildArea(lerp(fromBids.value, toBids.value, progress.value), 0, mid, height),
-    [mid, height],
-  );
-  const askPath = useDerivedValue(
-    () => buildArea(lerp(fromAsks.value, toAsks.value, progress.value), mid, width, height),
-    [mid, width, height],
-  );
+  // Captured values (mid, width, height) are tracked by the worklet closure; no deps array on native.
+  const bidPath = useDerivedValue(() => buildArea(lerp(fromBids.value, toBids.value, progress.value), 0, mid, height));
+  const askPath = useDerivedValue(() => buildArea(lerp(fromAsks.value, toAsks.value, progress.value), mid, width, height));
 
   const onLayout = (e: LayoutChangeEvent) => setWidth(Math.round(e.nativeEvent.layout.width));
 

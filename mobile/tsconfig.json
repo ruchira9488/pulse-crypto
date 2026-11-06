@@ -4,9 +4,16 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@pulse/contracts": ["../packages/contracts/src/index.ts"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@pulse/contracts": [
+        "../packages/contracts/src/index.ts"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

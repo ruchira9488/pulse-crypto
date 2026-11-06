@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { colors } from '@/core/theme';
 import { formatPair } from '@/core/format/pair';
-import { useDrawer } from '@/features/app-shell';
+import { FocusGate, useDrawer } from '@/features/app-shell';
 import { ConnectionBadge, ConnectionBanner, useConnectionView } from '@/features/connection';
 import { MarketDepthPanel } from '@/features/market-depth';
 import { AppHeader } from '@/shared/ui';
@@ -24,12 +24,14 @@ export function TerminalScreen() {
         right={<LiveIcon />}
       />
       <ConnectionBanner />
-      <ScrollView contentContainerStyle={styles.content}>
-        <PriceHeader pair={pair} />
-        <MarketStats pair={pair} />
-        <OrderBook pair={pair} />
-        <MarketDepthPanel pair={pair} />
-      </ScrollView>
+      <FocusGate>
+        <ScrollView contentContainerStyle={styles.content}>
+          <PriceHeader pair={pair} />
+          <MarketStats pair={pair} />
+          <OrderBook pair={pair} />
+          <MarketDepthPanel pair={pair} />
+        </ScrollView>
+      </FocusGate>
     </View>
   );
 }
