@@ -1,0 +1,16 @@
+{
+  "name": "pulse-crypto",
+  "private": true,
+  "version": "1.0.0",
+  "description": "PulseCrypto – real-time crypto market gateway (Node.js) and viewer (React Native)",
+  "workspaces": [
+    "packages/*",
+    "backend"
+  ],
+  "scripts": {
+    "backend": "npm run dev -w backend",
+    "backend:start": "npm run build -w @pulse/contracts && npm run start -w backend",
+    "test": "npm test -w backend",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
