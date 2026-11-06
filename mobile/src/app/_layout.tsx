@@ -12,6 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from '@/core/theme';
 import { AppDrawer, TabBar } from '@/features/app-shell';
 import { useMarketStreamLifecycle } from '@/features/market-stream';
+import { usePairsMetaBootstrap } from '@/features/pairs-meta';
 import { useSettingsSync } from '@/features/settings';
 import { startTelemetry } from '@/features/telemetry';
 
@@ -37,6 +38,7 @@ export default function RootLayout() {
   // Start streaming immediately, in parallel with font loading.
   useMarketStreamLifecycle();
   useSettingsSync();
+  usePairsMetaBootstrap();
   useEffect(() => startTelemetry(), []);
 
   useEffect(() => {

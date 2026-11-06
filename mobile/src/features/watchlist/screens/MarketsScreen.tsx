@@ -1,12 +1,12 @@
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { colors, spacing } from '@/core/theme';
 import { ConnectionBadge, ConnectionBanner } from '@/features/connection';
 import { useSelectedPairStore } from '@/features/market-details';
 import { usePairsMetaStore } from '@/features/pairs-meta';
-import { useDrawer } from '@/features/app-shell';
+import { FocusGate, useDrawer } from '@/features/app-shell';
 import { AppHeader, AppText, SearchInput } from '@/shared/ui';
 import { FilterChips } from '../components/FilterChips';
 import { WatchlistRow } from '../components/WatchlistRow';
@@ -25,10 +25,6 @@ export function MarketsScreen() {
   const metaError = usePairsMetaStore((s) => s.error);
   const metaSource = usePairsMetaStore((s) => s.source);
   const select = useSelectedPairStore((s) => s.select);
-
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
 
   const openPair = useCallback(
     (symbol: string) => {
@@ -53,23 +49,25 @@ export function MarketsScreen() {
           </AppText>
         )}
       </View>
-      <FlashList
-        data={symbols}
-        keyExtractor={(s) => s}
-        renderItem={renderItem}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.up} colors={[colors.up]} progressBackgroundColor={colors.surface} />
-        }
-        ListEmptyComponent={
-          <View style={styles.empty}>
-            <AppText color="textMuted">
-              {favouritesOnly && !query ? 'No favourites yet. Tap ☆ to add one.' : query ? `No pairs match "${query}".` : 'Waiting for market data…'}
-            </AppText>
-          </View>
-        }
-      />
+      <FocusGate>
+        <FlashList
+          data={symbols}
+          keyExtractor={(s) => s}
+          renderItem={renderItem}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.up} colors={[colors.up]} progressBackgroundColor={colors.surface} />
+          }
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <AppText color="textMuted">
+                {favouritesOnly && !query ? 'No favourites yet. Tap ☆ to add one.' : query ? `No pairs match "${query}".` : 'Waiting for market data…'}
+              </AppText>
+            </View>
+          }
+        />
+      </FocusGate>
     </View>
   );
 }
