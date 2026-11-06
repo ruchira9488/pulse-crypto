@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { colors, spacing } from '@/core/theme';
-import { formatClock, formatPercent, formatPrice } from '@/core/format/number';
+import { formatClock, formatPrice, formatSmallPercent } from '@/core/format/number';
 import { useConnectionStore, usePairTick } from '@/features/market-stream';
 import { AppText } from '@/shared/ui';
 import { PressureBar } from './PressureBar';
@@ -21,7 +21,7 @@ export function MarketStats({ pair }: { pair: string }) {
           <AppText variant="mono">
             {formatPrice(tick.spread, Math.max(2, decimalsOf(tick.bestBid)))}{' '}
             <AppText variant="bodySmall" color="textMuted">
-              ({formatPercent(tick.spreadPct, 4)})
+              ({formatSmallPercent(tick.spreadPct)})
             </AppText>
           </AppText>
         </View>

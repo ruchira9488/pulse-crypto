@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { colors, spacing } from '@/core/theme';
-import { formatCompact, formatPercent } from '@/core/format/number';
+import { formatCompact, formatSmallPercent } from '@/core/format/number';
 import { splitPair } from '@/core/format/pair';
 import { usePairTick } from '@/features/market-stream';
 import { AppText } from '@/shared/ui';
@@ -38,7 +38,7 @@ export function MarketDepthPanel({ pair }: { pair: string }) {
               LIQUIDITY GAP
             </AppText>
             <AppText variant="mono" style={{ color: gap === 'Low' ? colors.up : gap === 'High' ? colors.down : colors.warning }}>
-              {gap} ({formatPercent(tick.spreadPct, 3)})
+              {gap} ({formatSmallPercent(tick.spreadPct)})
             </AppText>
           </View>
           <View style={styles.divider} />

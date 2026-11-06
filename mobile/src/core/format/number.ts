@@ -32,6 +32,13 @@ export function formatPrice(price: number, decimals = priceDecimals(price)): str
   return formatFixed(price, decimals);
 }
 
+/** Percent with enough significant digits for tiny values (e.g. BTC spreads ~0.00001%). */
+export function formatSmallPercent(value: number): string {
+  if (!Number.isFinite(value)) return '—';
+  if (value === 0) return '0%';
+  return Math.abs(value) >= 0.01 ? `${value.toFixed(3)}%` : `${Number(value.toPrecision(2))}%`;
+}
+
 export function formatPercent(value: number, decimals = 2, withSign = false): string {
   if (!Number.isFinite(value)) return '—';
   const sign = withSign && value > 0 ? '+' : '';
