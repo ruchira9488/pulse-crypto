@@ -11,6 +11,7 @@
     "backend": "npm run dev -w backend",
     "backend:start": "npm run build -w @pulse/contracts && npm run start -w backend",
     "test": "npm test -w backend",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "postinstall": "npm run build -w @pulse/contracts"
   }
 }
