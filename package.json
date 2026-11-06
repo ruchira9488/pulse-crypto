@@ -12,6 +12,10 @@
     "backend:start": "npm run build -w @pulse/contracts && npm run start -w backend",
     "test": "npm test -w backend",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "postinstall": "npm run build -w @pulse/contracts"
+    "postinstall": "npm run build -w @pulse/contracts",
+    "mobile:install": "npm install --prefix mobile",
+    "mobile": "npm start --prefix mobile",
+    "mobile:test": "npm test --prefix mobile",
+    "test:all": "npm test -w backend && npm test --prefix mobile"
   }
 }
