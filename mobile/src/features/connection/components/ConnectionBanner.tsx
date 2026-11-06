@@ -10,7 +10,7 @@ import { useConnectionView } from './use-connection-view';
 /** Explains degraded states and offers a manual retry. Hidden while live. */
 export function ConnectionBanner() {
   const view = useConnectionView();
-  const lastConnectedAt = useConnectionStore((s) => s.lastConnectedAt);
+  const lastLiveAt = useConnectionStore((s) => s.lastLiveAt);
   const status = useConnectionStore((s) => s.status);
   if (!view.detail || view.tone === 'idle') return null;
 
@@ -24,7 +24,7 @@ export function ConnectionBanner() {
         </AppText>
         <AppText variant="bodySmall" color="textSecondary">
           {view.detail}
-          {lastConnectedAt && view.tone === 'down' ? ` Last live at ${formatClock(lastConnectedAt).slice(0, 8)}.` : ''}
+          {lastLiveAt && view.tone === 'down' ? ` Last update ${formatClock(lastLiveAt).slice(0, 8)}.` : ''}
         </AppText>
       </View>
       {canRetry && <Button label="RETRY" variant="outlined" compact onPress={() => marketStream.reconnectNow()} />}

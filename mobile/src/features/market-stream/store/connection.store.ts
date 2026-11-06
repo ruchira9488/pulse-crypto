@@ -13,8 +13,8 @@ export interface ConnectionState {
   effectiveIntervalMs?: number;
   serverConfig?: ClientConfig;
   compressionAvailable: boolean;
-  /** Last time the socket was healthy, for "showing data from HH:MM" copy. */
-  lastConnectedAt?: number;
+  /** When live data last arrived before the current outage. */
+  lastLiveAt?: number;
   set: (patch: Partial<Omit<ConnectionState, 'set'>>) => void;
 }
 

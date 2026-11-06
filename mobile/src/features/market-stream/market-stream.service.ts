@@ -62,11 +62,13 @@ function onMessage(message: ServerMessage, byteLength: number): void {
 function onStatus(info: StatusInfo): void {
   const prev = useConnectionStore.getState();
   if (info.status === 'reconnecting' && prev.status === 'connected') streamMetrics.reconnects += 1;
+  const leftLive = prev.status === 'connected' && info.status !== 'connected';
   prev.set({
     status: info.status,
     attempt: info.attempt,
     retryInMs: info.retryInMs,
-    ...(info.status === 'connected' ? { lastConnectedAt: Date.now() } : null),
+    // Remember when data last actually flowed, for "showing data from HH:MM:SS".
+    ...(leftLive ? { lastLiveAt: streamMetrics.lastMessageAt || Date.now() } : null),
   });
 }
 
