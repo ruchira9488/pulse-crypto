@@ -69,7 +69,7 @@ export function loadConfig(env: Env = process.env): AppConfig {
 
   return {
     host: env.HOST ?? '0.0.0.0',
-    port: int(env, 'PORT', 8080, 1, 65535),
+    port: int(env, 'PORT', 8080, 0, 65535), // 0 = ephemeral (tests)
     logLevel: env.LOG_LEVEL ?? 'info',
     pairs,
     marketSource,
