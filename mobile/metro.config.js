@@ -17,4 +17,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   return (defaultResolve ?? context.resolveRequest)(context, moduleName, platform);
 };
 
+// The project is small; the Node crawler is fast enough and avoids depending on a
+// working local Watchman install.
+config.resolver.useWatchman = false;
+
 module.exports = config;
