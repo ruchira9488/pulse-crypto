@@ -374,22 +374,34 @@ The drawer (Pro Trader, API Keys…) is a presentational placeholder. Authentica
 | **zustand + rAF batching** instead of Redux/Context | Minimal boilerplate, selector-level subscriptions, easy to reason about | Less structure and tooling than Redux Toolkit for very large teams. |
 | **Expo / Expo Go** | Fast setup for reviewers, no native build needed; every native module used is in Expo Go | Production builds would use a development build or EAS; Expo Go is for evaluation. |
 | **Mobile outside the npm workspace** | Avoids React Native's well-known hoisting issues in monorepos; contracts are consumed from source through a Metro resolver and a `tsconfig` path | Two installs (`npm install` + `npm run mobile:install`). |
+| **Broadcast all pairs to every client** (no per-pair subscriptions) | The watchlist needs every pair's price anyway; each pair's JSON is encoded once per version and reused for every client | Each client also receives order books for pairs it isn't viewing. Fine at 5 pairs; with many pairs, a `subscribe` message would limit books to the pair on screen while prices stay broadcast. |
 | **Single gateway instance** | Matches the brief | Scaling out would put a pub/sub layer (e.g. Redis or NATS) between ingest and broadcast. The ingest → store → broadcast split already allows this. |
 
 ---
 
 ## How AI-assisted development tools were used
 
-This project was built with **Claude Code** (Anthropic) as an agentic pair programmer, working in my local repository and Android emulator. How the work was split:
+I built this with **Claude Code** (Anthropic) as an agentic pair programmer working in my local repository and Android emulator. I treated it like a fast engineer on my team: I set the direction and constraints, it planned and implemented, and I checked the result against the brief and the mockups before accepting it.
 
-**What I did:** supplied the brief and the UI mockups; chose the architecture direction (feature-based structure for both apps, commits in small logical steps); reviewed the plan before any code was written; reviewed the output; made the decisions on the open questions.
+### How I directed the work
 
-**What the AI did:**
+- **Constraints up front.** Before any code: feature-based architecture on both the backend and the app, a written plan for me to approve first, and commits in small logical steps (boilerplate, contracts, each backend feature, each mobile feature) instead of one large drop. The plan was revised once I supplied the mockups.
+- **Verification as part of every step, not at the end.** Each step had to pass the test suites and type checks, and the app had to be exercised on the Android emulator. Claims about performance had to be measured (load test with stalled clients, handler timings, the telemetry screen), not asserted.
+- **Scope checks against the brief.** I asked for the telemetry feature to be traced back to the requirements. It is not a functional requirement; it comes from the mockup and is kept because it measures the non-functional ones (responsive UI, efficient state management, bounded memory).
+- **An architecture review against the requirements.** I asked for each decision to be mapped to a requirement and for the weak spots to be named. They are listed in the trade-offs table above: no per-pair subscriptions, top-20 snapshots rather than a locally maintained full book, and a single gateway instance.
 
-- **Planning.** It read the brief, proposed a plan for the monorepo, the buffering strategy and the protocol, then revised it once the mockups arrived (adding the Telemetry and Settings features and turning the mockup's throttling controls into real per-client server settings).
-- **Implementation.** It wrote the backend, contracts and mobile code feature by feature, checking current docs where its knowledge could be stale (Expo SDK 58 Router, drawer and Reanimated setup; Skia 2.x's move to `PathBuilder`, found through type errors).
-- **Verification.** It ran the test suites and type checks after each step; load-tested the gateway with stalled clients; ran the app on the Android emulator and inspected screenshots; profiled the JS handlers.
-- **Bugs caught by running the app,** not by tests:
+### Where I corrected or overrode it
+
+- **Missing mockup element.** The Settings dashboard showed a "JS Heap" tile where the mockup has a **Memory Footprint Tracker**. I flagged it; the fix inspected the real Hermes stats on the device and found the old tile was also reading the wrong figure (reserved heap segments, which stay flat). The tracker now reports live heap plus external memory, with the reserved heap and GC count alongside.
+- **Mockup wording kept.** The AI renamed "Binary Protocol Compression" to "WebSocket Compression" because the protocol is JSON with permessage-deflate. I reverted it to keep the approved design copy; the README documents what the toggle actually does.
+- **Demo recording.** After the memory change I had the screen recording redone so the deliverable matches the shipped app.
+
+### What the AI did
+
+- **Planning:** proposed the monorepo layout, the buffering strategy (latest-value-wins conflation, per-client send timers, `bufferedAmount` limits) and the protocol, then turned the mockup's throttling controls into real per-client server settings.
+- **Implementation:** wrote the backend, contracts and mobile code feature by feature, checking current docs where its knowledge could be stale (Expo SDK 58 Router, Reanimated setup, Skia 2.x's move to `PathBuilder`, found through type errors).
+- **Verification:** ran tests and type checks after each step, load-tested the gateway, drove the app on the emulator with scripted taps and inspected screenshots, profiled the JS handlers, and recorded the demo.
+- **Bugs found by running the app,** not by tests:
   - The 24h change number was clipped because JetBrains Mono has no ▲/▼ glyphs.
   - Market cap stayed empty until the Markets tab was opened.
   - Spreads rounded to `0.0000%`.
@@ -397,4 +409,6 @@ This project was built with **Claude Code** (Anthropic) as an agentic pair progr
   - Hidden tabs still rendered updates under `freezeOnBlur`.
   - Slow consumers lingered because their close frame queued behind the backlog.
 
-Everything was reviewed before committing. The AI's role is stated here because the brief asks how these tools were used.
+### What I took from it
+
+The AI was fastest where the target was well defined (protocol types, parsers, UI components from a mockup) and needed the most direction on things the brief leaves open: what to buffer and drop, where the limits sit, and what is in scope. Keeping it on short steps with a test and an emulator check after each one is what kept the result reviewable.
