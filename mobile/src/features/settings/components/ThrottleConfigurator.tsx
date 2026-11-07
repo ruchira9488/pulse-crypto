@@ -71,8 +71,8 @@ export function ThrottleConfigurator() {
       <View style={styles.divider} />
 
       <ToggleRow
-        label="Binary Protocol Compression"
-        hint={compressionAvailable ? 'permessage-deflate on each frame' : 'Not negotiated on this connection'}
+        label="WebSocket Compression"
+        hint={compressionAvailable ? 'permessage-deflate on each JSON frame' : 'Not negotiated on this connection'}
         value={compress}
         onChange={setCompress}
         disabled={!compressionAvailable}
