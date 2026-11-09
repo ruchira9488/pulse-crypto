@@ -108,7 +108,7 @@ A standalone debug build (optional) is available with `npm run android:build --p
 
 ```bash
 npm test               # backend (Vitest): 38 tests, including an end-to-end WS test
-npm run mobile:test    # mobile (Jest / jest-expo): 30 tests
+npm run mobile:test    # mobile (Jest / jest-expo): 33 tests
 npm run typecheck      # contracts + backend
 cd mobile && npx tsc --noEmit
 ```
@@ -337,10 +337,10 @@ The drawer (Pro Trader, API Keys…) is a presentational placeholder. Authentica
 
 ## Testing and verification
 
-**Automated tests: 68 in total.**
+**Automated tests: 71 in total.**
 
 - Backend (Vitest, 38): order-book metrics, conflation and version semantics, JSON caching, Binance frame parsing including malformed input, reconnect with backoff against a fake upstream, synthetic feed, slow-consumer skip/disconnect/timeout, adaptive back-off and recovery, protocol validation, `/pairs/meta` mapping, caching, coalescing and mock fallback, plus an **end-to-end test** (synthetic feed → store → gateway → real `ws` client: hello, snapshot, updates, configure, ping, invalid input, 404 path).
-- Mobile (Jest, 30): `MarketSocket` (connected only after hello, backoff and reset, offline pause and immediate resume, background pause, config re-applied after reconnect, stale-socket watchdog, malformed frames), `TickBuffer` conflation, watchlist search and filter, depth-curve maths, connection-state mapping, telemetry rate maths.
+- Mobile (Jest, 33): `MarketSocket` (connected only after hello, backoff and reset, offline pause and immediate resume, background pause, config re-applied after reconnect, stale-socket watchdog, malformed frames), `TickBuffer` conflation, watchlist search and filter, depth-curve maths, connection-state mapping, telemetry rate maths, memory-footprint parsing from Hermes stats.
 
 **Manual verification on the Android emulator** (Pixel 9 Pro AVD, Expo Go, live Binance data):
 
